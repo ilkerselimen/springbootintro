@@ -46,4 +46,8 @@ public class Student {
     //@Setter(AccessLevel.NONE)
     private LocalDateTime createDate = LocalDateTime.now();
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }
