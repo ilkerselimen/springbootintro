@@ -24,7 +24,7 @@ public class StudentService {
 
     public void createStudent(Student student) {
         if(studentRepository.existsByEmail(student.getEmail())){
-            throw new ConflictException("email is already exist !!");
+            throw new ConflictException("Email is already exist !!");
         }
 
         studentRepository.save(student);
@@ -32,30 +32,31 @@ public class StudentService {
 
     public Student findStudent(Long id) {
         return studentRepository.findById(id).orElseThrow(
-                ()->new ResourceNotFoundException("student not found with id : " + id));
+                ()->new ResourceNotFoundException("Student not found with id : " + id));
     }
 
     public void deleteStudent(Long id) {
         Student student = findStudent(id);
+
         studentRepository.delete(student);
     }
 
     public void updateStudent(Long id, StudentDTO studentDTO) {
-        // email DB de var mi ?
-        boolean emailExist = studentRepository.existsByEmail(studentDTO.getEmail());
+        // email DB de var mi ??
+        boolean emailExist =  studentRepository.existsByEmail(studentDTO.getEmail());
 
-        // istenilen id de Student var mi ?
+        //istenilen id de Student var mi ???
         Student student = findStudent(id);
 
-        if (emailExist && ! studentDTO.getEmail().equals(student.getEmail())){
+        if(emailExist && ! studentDTO.getEmail().equals(student.getEmail())) {
             throw new ConflictException("Email is already exist");
         }
-
         /*
-                senaryo 1 : kendi emailim mirac, mirac girdim                       (update)
-                senaryo 2 : kendi emailim mirac, ahmet girdim fakat DB de zaten var (exception)
-                senaryo 3 : kendi emailim mirac, mehmet girdim ve DB de yok         (update)
+               senaryo 1 : kendi email mrc , mrc girdim         ( update olur )
+            ** senaryo 2 : kendi email mrc, ahmt girdim ve DB de zaten var     ( exception )
+               senaryo 3 : kendi email mrc, mhmt ve DB de yok     (update)
          */
+
 
         student.setName(studentDTO.getFirstName());
         student.setLastName(studentDTO.getLastName());
@@ -64,6 +65,7 @@ public class StudentService {
         student.setPhoneNumber(studentDTO.getPhoneNumber());
 
         studentRepository.save(student);
+
     }
 
     public Page<Student> getAllWithPage(Pageable pageable) {
@@ -74,5 +76,14 @@ public class StudentService {
         return studentRepository.findByLastName(lastName);
     }
 
+    public List<Student> findAllEqualsGrade(Integer grade) {
 
+        return  studentRepository.findAllEqualsGrade(grade);
+    }
+
+    public StudentDTO findStudentDTOById(Long id) {
+
+        return studentRepository.findStudentDTOById(id).orElseThrow(()->
+                new ResourceNotFoundException("Student not found with id : " + id));
+    }
 }
