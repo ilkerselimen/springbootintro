@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -45,9 +42,9 @@ public class StudentDTO {
         this.firstName = student.getName();
         this.lastName = student.getLastName();
         this.grade = student.getGrade();
-        this.email = student.getEmail();
-        this.phoneNumber = student.getPhoneNumber();
-        this.createDate = student.getCreateDate();
+        this.email= student.getEmail();
+        this.phoneNumber= student.getPhoneNumber();
+        this.createDate=student.getCreateDate();
     }
 
 }
