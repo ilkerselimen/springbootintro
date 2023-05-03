@@ -1,4 +1,4 @@
-package com.tpe.security;
+package com.tpe.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,32 +13,37 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration // Security katmanina bu classimin configuration classi oldugunu soyluyorum
+@Configuration // Security katmanina bu clasimin konfigurasyon vlasi oldugunu soylutorum
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // method seviyede yetkilendirme yapacagimi soyluyorum
+@EnableGlobalMethodSecurity(prePostEnabled = true) // merhod seviyede yetkilendirme yapacagimi soyluyorum
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    // !!! bu classta amacimiz: AuthManager, Provider, PassEncoder larimi olusturup birbirleriyle tanistirmak.
+    // !!! bu classda amacimiz : AuthManager, Provider , PassEncoder larimi olusturup birbirleriyle
+    // tanistirmak
 
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable(). // csrf korumasini disable yapiyoruz
-                authorizeHttpRequests(). // gelen butun requestleri yetkili mi diye kontrol edecegiz
+        http.csrf().disable().  // csrf korumasini disable yapiyoruz
+                authorizeHttpRequests().  // gelen butun rwquestleri yetkilimi diye kontrol edecegiz
                 antMatchers("/",
-                        "index.html",
-                        "/css/*",
-                        "/js/*").permitAll(). // bu end-pointleri yetkili mi diye kontrol etme !
-                anyRequest(). // muaf tutulan end-pointler disinda gelen herhangi bir requesti yetkili mi diye kontrol et
-                authenticated().
+                "index.html",
+                "/register",
+                "/css/*",
+                "/js/*").permitAll(). // bu end-pointleri yetkili mi diye kontrol etme
+                // and().
+                // authorizeRequests().antMatchers("/students/**").hasRole("ADMIN"). // end-point seviyesinde yetkilendirme yapmak icin bu satiri ekledik
+                        anyRequest(). // muaf tutulan end-pointler disinda gelen herhangi bir requesti
+                authenticated(). // yetkili mi diye kontrol et
                 and().
-                httpBasic(); // bunu yaparken de Basic Auth kullanilacagini belirtiyoruz.
+                httpBasic(); // bunu yaparkende Basic Auth kullanilacagini belirtiyoruz
     }
 
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
@@ -47,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         authProvider.setPasswordEncoder(passwordEncoder()); // encoder ile tanistirdim
-        authProvider.setUserDetailsService(userDetailsService); // service katim ile tanistirdim
+        authProvider.setUserDetailsService(userDetailsService); // Service katimi kanistirmis oldum
 
         return authProvider;
 
@@ -55,12 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider()); // manageri provider ile tanistirdik.
+
+        auth.authenticationProvider(authProvider());
     }
-
 }
-
-
-
-
-
