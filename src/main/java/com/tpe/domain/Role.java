@@ -14,12 +14,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "tbl_role")
+@Table(name="tbl_role")
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
@@ -31,5 +31,4 @@ public class Role {
                 "name=" + name +
                 '}';
     }
-
 }
