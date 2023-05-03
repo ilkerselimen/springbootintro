@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "tbl_user")
+@Table(name= "tbl_user")
 public class User {
 
     @Id
@@ -35,14 +36,16 @@ public class User {
     @Column(length = 255, nullable = false)
     private String password;
 
-    @JoinTable(name = "tbl_user_role",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @ManyToMany(fetch =  FetchType.EAGER)
-    private Set<Role> role; // Admin ; Student , unique olmasi gerektigi icin List yerine Set kullandik
+    @JoinTable(name="tbl_user_role",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"))
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> role = new HashSet<>(); // Admin ; Student
 
     @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Student student;
+
+
 
 }
